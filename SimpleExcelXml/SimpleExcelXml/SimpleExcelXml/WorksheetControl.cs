@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Collections.Generic;
@@ -307,9 +307,15 @@ namespace SimpleExcelXml
             }
 
             if (nearRow != null)
+            {
                 nearRow.InsertBeforeSelf<Row>(row);
+                if (nearRow.RowIndex.Value.Equals(row.RowIndex.Value))
+                    nearRow.Remove();
+            }
             else
+            {
                 this.Current.SheetData.Append(row);
+            }
         }
 
         /// <summary>
