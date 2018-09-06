@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +28,34 @@ namespace SimpleExcelXml
 
             return CellValues.Number;
         }
+
+        /// <summary>
+        /// セルから値取得
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public static object GetValue(this Cell cell)
+        {
+            string value = cell.CellValue.InnerText;
+            switch (cell.DataType.Value)
+            {
+                case CellValues.Boolean:
+                    return value.Equals("1");
+                case CellValues.Date:
+                    return DateTime.FromOADate(Convert.ToDouble(value));
+                case CellValues.InlineString:
+                    return cell.InlineString.Text.InnerText;
+                case CellValues.Number:
+                    double n;
+                    double.TryParse(value, out n);
+                    return n;
+                case CellValues.String:
+                case CellValues.Error:
+                default:
+                    return value;
+            }
+        }
+
     }
 
     public static class CommonExtension
