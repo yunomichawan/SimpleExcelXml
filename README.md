@@ -1,6 +1,8 @@
 # SimpleExcelXml
 OpenXmlを使用しExcelをシンプルな機能のみで作成するライブラリを作成しました。
+
 シンプルな機能のみをコンセプトとしているため、セルの書式設定等は実装しておりません(実装することは可能)。
+
 このライブラリはDocumentFormat.OpenXmlを使用して作成されています。
 
 ## -説明- Description
@@ -49,7 +51,9 @@ OpenXmlを使用しExcelをシンプルな機能のみで作成するライブ�
 ・template.xlsx … ファイルを作成するときにテンプレートとして使用します。
 
 ## 豆知識 -Tips-
-・Excelファイルの拡張子をzipに変更し解凍することができます。解凍されたファイルの中に「xml」ファイルが含まれており、これをブラウザ上で開くとExcelがどのように構成されているかわかります。
+Excelファイルの拡張子をzipに変更し解凍することができます。
+
+解凍されたファイルの中に「xml」ファイルが含まれており、これをブラウザ上で開くとExcelがどのように構成されているかわかります。
 
 ## -必須- Requirement
 ・[DocumentFormat.OpenXml](https://www.nuget.org/packages/DocumentFormat.OpenXml/)
