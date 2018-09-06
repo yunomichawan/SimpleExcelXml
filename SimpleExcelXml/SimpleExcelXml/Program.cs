@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,12 +36,13 @@ namespace ConsoleApplication1
             simpleExcelCreator.SetSheetName("ChangeName");
             simpleExcelCreator.SelectSheet("SampleSheet1");
             // アルファベットと行番目でデータ書込
-            simpleExcelCreator.WriteCell("A", 0, 1000);
+            simpleExcelCreator.WriteCell("A", 1, 1000);
             // セル指定でデータ書込
             simpleExcelCreator.WriteCell("A2", "temp");
             simpleExcelCreator.WriteCell("D2", "temp");
             simpleExcelCreator.WriteCell("F2", "temp");
             simpleExcelCreator.WriteCell("E2", "temp");
+
             // 座標指定でデータ書込
             for (int i = 10; i < 30; i++)
             {
@@ -57,8 +58,15 @@ namespace ConsoleApplication1
             simpleExcelCreator.WriteCell(1, 10, "test");
             // 行のコピー&ペースト
             simpleExcelCreator.WorksheetControl.RowCopyPaste(2, 5, false);
+            simpleExcelCreator.WorksheetControl.RowCopyPaste(5, 7, false);
+            simpleExcelCreator.WorksheetControl.RowCopyPaste(4, 7, false);
             // シートの削除
             simpleExcelCreator.RemoveSheet("SampleSheet3");
+            // セルの値読取
+            object value1 = simpleExcelCreator.ReadCell(1, 10);
+            object value2 = simpleExcelCreator.ReadCell("A2");
+            object value3 = simpleExcelCreator.ReadCell("C2");
+            Console.WriteLine(string.Format("value1 = {0}, value2 = {1}, value3 = {2}", value1, value2, value3));
             // 保存
             simpleExcelCreator.Save();
         }
