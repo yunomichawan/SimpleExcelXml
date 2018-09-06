@@ -225,10 +225,11 @@ namespace SimpleExcelXml
         /// </summary>
         /// <param name="from">コピー元となる行数</param>
         /// <param name="to">ペースト先の行数</param>
+        /// <param name="isInsert">挿入(true),ペースト(false)</param>
         /// <param name="isDeep">コピーの深度</param>
-        public void RowCopyPaste(uint from, uint to, bool isDeep = true)
+        public void RowCopyPaste(uint from, uint to, bool isInsert, bool isDeep = true)
         {
-            this.WorksheetControl.RowCopyPaste(from, to, isDeep);
+            this.WorksheetControl.RowCopyPaste(from, to, false, isDeep);
         }
 
         /// <summary>
