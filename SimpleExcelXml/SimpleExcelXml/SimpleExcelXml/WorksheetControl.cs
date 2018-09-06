@@ -128,7 +128,7 @@ namespace SimpleExcelXml
 
         #endregion
 
-        #region writecell
+        #region write,readcell
 
         /// <summary>
         /// セルに書込
@@ -138,7 +138,6 @@ namespace SimpleExcelXml
         /// <param name="value"></param>
         public void WriteCell(string column, uint y, object value)
         {
-            y++;
             Row row = this.GetRowElement(y);
             Cell cell = this.GetCellElement(row, y, column);
             cell.CellValue = new CellValue(value.ToString());
@@ -151,11 +150,10 @@ namespace SimpleExcelXml
         /// <param name="x">x座標</param>
         /// <param name="y">y座標</param>
         /// <param name="value">値</param>
-        public void WriteCell(int x, int y, object value)
+        public void WriteCell(uint x, uint y, object value)
         {
-            x++;
             string column = this.GetColumnFromIndex(x);
-            this.WriteCell(column, (uint)y, value);
+            this.WriteCell(column, y, value);
         }
 
         /// <summary>
@@ -167,7 +165,6 @@ namespace SimpleExcelXml
         {
             string column = Regex.Replace(cell, @"[^A-Z]", "");
             int y = int.Parse(Regex.Replace(cell, @"[^0-9]", ""));
-            y--;
             this.WriteCell(column, (uint)y, value);
 
         }
@@ -177,14 +174,14 @@ namespace SimpleExcelXml
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private string GetColumnFromIndex(int index)
+        private string GetColumnFromIndex(uint index)
         {
             // 1桁目 + 2桁目(十の位) * 26 = 2桁目の計算
             // 1桁目 + 2桁目(十の位) * 26 + 3桁目(百の位) * 676
             string column;
-            int n1 = index / 676;
-            int n2 = index % 676 / 26;
-            int n3 = index % 676 % 26 + 1;
+            uint n1 = index / 676;
+            uint n2 = index % 676 / 26;
+            uint n3 = index % 676 % 26 + 1;
             column = n1 > 0 ? ((char)(n1 + 64)).ToString() : "";
             column += n2 > 0 ? ((char)(n2 + 64)).ToString() : "";
             column += ((char)(n3 + 64)).ToString();
@@ -217,6 +214,43 @@ namespace SimpleExcelXml
             }
 
             return index;
+        }
+
+        /// <summary>
+        /// セルの値取得
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public object ReadCell(string cell)
+        {
+            string column = Regex.Replace(cell, @"[^A-Z]", "");
+            int y = int.Parse(Regex.Replace(cell, @"[^0-9]", ""));
+            return this.ReadCell(column, (uint)y);
+        }
+
+        /// <summary>
+        /// セルの値取得
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public object ReadCell(int x, int y)
+        {
+            string column = this.GetColumnFromIndex((uint)x);
+            return ReadCell(column, (uint)y);
+        }
+
+        /// <summary>
+        /// セルの値取得
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private object ReadCell(string column, uint y)
+        {
+            Row row = this.GetRowElement((uint)y);
+            Cell cell = this.GetCellElement(row, (uint)y, column);
+            return cell.GetValue();
         }
 
         #endregion
@@ -310,7 +344,9 @@ namespace SimpleExcelXml
             {
                 nearRow.InsertBeforeSelf<Row>(row);
                 if (nearRow.RowIndex.Value.Equals(row.RowIndex.Value))
+                {
                     nearRow.Remove();
+                }
             }
             else
             {
@@ -344,7 +380,7 @@ namespace SimpleExcelXml
                 {
                     uint index = this.GetIndexFromColumn(c.CellReference.Value);
                     index++;
-                    c.CellReference.Value = this.GetColumnFromIndex((int)index) + row.RowIndex.Value.ToString();
+                    c.CellReference.Value = this.GetColumnFromIndex(index) + row.RowIndex.Value.ToString();
                 });
             }
 
