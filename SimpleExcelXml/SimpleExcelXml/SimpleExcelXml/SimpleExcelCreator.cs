@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
@@ -165,7 +165,6 @@ namespace SimpleExcelXml
         public void Save()
         {
             this.WorksheetControl.Save();
-
             this.SpreadsheetDoc.Close();
         }
 
@@ -190,7 +189,7 @@ namespace SimpleExcelXml
         /// <param name="value">値</param>
         public void WriteCell(int x, int y, object value)
         {
-            this.WorksheetControl.WriteCell(x, y, value);
+            this.WorksheetControl.WriteCell((uint)x, (uint)y, value);
         }
 
         /// <summary>
@@ -201,6 +200,22 @@ namespace SimpleExcelXml
         public void WriteCell(string cell, object value)
         {
             this.WorksheetControl.WriteCell(cell, value);
+        }
+
+        /// <summary>
+        /// セルの値取得
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public object ReadCell(int x, int y)
+        {
+            return this.WorksheetControl.ReadCell(x, y);
+        }
+
+        public object ReadCell(string cell)
+        {
+            return this.WorksheetControl.ReadCell(cell);
         }
 
         #endregion
