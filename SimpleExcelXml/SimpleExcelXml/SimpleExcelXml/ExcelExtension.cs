@@ -42,7 +42,9 @@ namespace SimpleExcelXml
                 case CellValues.Boolean:
                     return value.Equals("1");
                 case CellValues.Date:
-                    return DateTime.FromOADate(Convert.ToDouble(value));
+                    DateTime d;
+                    DateTime.TryParse(value, out d);
+                    return d;
                 case CellValues.InlineString:
                     return cell.InlineString.Text.InnerText;
                 case CellValues.Number:
