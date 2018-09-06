@@ -57,15 +57,17 @@ namespace ConsoleApplication1
             simpleExcelCreator.WriteDataObject(this.GetSample());
             simpleExcelCreator.WriteCell(1, 10, "test");
             // 行のコピー&ペースト
-            simpleExcelCreator.WorksheetControl.RowCopyPaste(2, 5, false);
-            simpleExcelCreator.WorksheetControl.RowCopyPaste(5, 7, false);
-            simpleExcelCreator.WorksheetControl.RowCopyPaste(4, 7, false);
+            simpleExcelCreator.RowCopyPaste(2, 5, true);
+            simpleExcelCreator.RowCopyPaste(5, 7, false);
+            simpleExcelCreator.RowCopyPaste(4, 7, false);
             // シートの削除
             simpleExcelCreator.RemoveSheet("SampleSheet3");
             // セルの値読取
             object value1 = simpleExcelCreator.ReadCell(1, 10);
             object value2 = simpleExcelCreator.ReadCell("A2");
             object value3 = simpleExcelCreator.ReadCell("C2");
+            simpleExcelCreator.WriteCell(1, 11, DateTime.Now);
+            object value4 = simpleExcelCreator.ReadCell(1, 11);
             Console.WriteLine(string.Format("value1 = {0}, value2 = {1}, value3 = {2}", value1, value2, value3));
             // 保存
             simpleExcelCreator.Save();
@@ -76,7 +78,7 @@ namespace ConsoleApplication1
         /// </summary>
         public void CreateTemp()
         {
-            SimpleExcelCreator simpleExcelCreator = new SimpleExcelCreator("template.xlsx", "use_template.xlsx");
+            SimpleExcelCreator simpleExcelCreator = new SimpleExcelCreator("template.xlsx", "use_template.xlsx", true);
             simpleExcelCreator.WriteDataObject(this.GetSample());
             simpleExcelCreator.WriteCell(1, 10, "test");
             simpleExcelCreator.Save();
