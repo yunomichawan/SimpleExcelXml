@@ -78,7 +78,7 @@ namespace ConsoleApplication1
         /// </summary>
         public void CreateTemp()
         {
-            SimpleExcelCreator simpleExcelCreator = new SimpleExcelCreator("template.xlsx", "use_template.xlsx", true);
+            SimpleExcelCreator simpleExcelCreator = new SimpleExcelCreator("template.xlsx", "use_template.xlsx");
             simpleExcelCreator.WriteDataObject(this.GetSample());
             simpleExcelCreator.WriteCell(1, 10, "test");
             simpleExcelCreator.Save();
