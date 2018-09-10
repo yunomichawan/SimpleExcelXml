@@ -39,6 +39,11 @@ namespace SimpleExcelXml
         /// </summary>
         private SpreadsheetDocument SpreadsheetDoc { get; set; }
 
+        /// <summary>
+        /// 保存Stream
+        /// </summary>
+        private Stream ExcelStream { get; set; }
+
         #endregion
 
         #region constructor
@@ -50,7 +55,8 @@ namespace SimpleExcelXml
         public SimpleExcelCreator(string outputPath, SpreadsheetDocumentType type = SpreadsheetDocumentType.Workbook)
         {
             this.OutputPath = outputPath;
-            this.SpreadsheetDoc = SpreadsheetDocument.Create(this.OutputPath, type);
+            this.ExcelStream = new MemoryStream();
+            this.SpreadsheetDoc = SpreadsheetDocument.Create(this.ExcelStream, type);
             this.Init(true);
         }
 
@@ -64,7 +70,8 @@ namespace SimpleExcelXml
             this.OutputPath = outputPath;
             this.TempPath = tempPath;
             File.Copy(this.TempPath, this.OutputPath, true);
-            this.SpreadsheetDoc = SpreadsheetDocument.Open(this.TempPath, true);
+            this.ExcelStream = File.Open(this.OutputPath, FileMode.OpenOrCreate);
+            this.SpreadsheetDoc = SpreadsheetDocument.Open(this.ExcelStream, true);
             this.Init(false);
         }
 
@@ -166,6 +173,12 @@ namespace SimpleExcelXml
         {
             this.WorksheetControl.Save();
             this.SpreadsheetDoc.Close();
+            if (this.ExcelStream is MemoryStream)
+                File.WriteAllBytes(this.OutputPath, ((MemoryStream)this.ExcelStream).ToArray());
+
+            this.ExcelStream.Close();
+            this.ExcelStream.Dispose();
+            this.SpreadsheetDoc.Dispose();
         }
 
         #region cell
@@ -229,7 +242,7 @@ namespace SimpleExcelXml
         /// <param name="isDeep">コピーの深度</param>
         public void RowCopyPaste(uint from, uint to, bool isInsert, bool isDeep = true)
         {
-            this.WorksheetControl.RowCopyPaste(from, to, false, isDeep);
+            this.WorksheetControl.RowCopyPaste(from, to, isInsert, isDeep);
         }
 
         /// <summary>
