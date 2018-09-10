@@ -70,6 +70,7 @@ namespace SimpleExcelXml
                     if (s.Id.Value.Equals(id))
                     {
                         sheet = s;
+                        break;
                     }
                 }
                 this.WorksheetObjects.Add(new WorksheetObject(worksheetPart, sheet));
@@ -166,7 +167,6 @@ namespace SimpleExcelXml
             string column = Regex.Replace(cell, @"[^A-Z]", "");
             int y = int.Parse(Regex.Replace(cell, @"[^0-9]", ""));
             this.WriteCell(column, (uint)y, value);
-
         }
 
         /// <summary>
@@ -325,19 +325,15 @@ namespace SimpleExcelXml
             {
                 overRows = this.Current.SheetData.Elements<Row>().Where(r => r.RowIndex.Value >= row.RowIndex.Value);
                 nearRow = overRows.FirstOrDefault();
-            }
-            else
-            {
-                nearRow = this.Current.SheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value >= row.RowIndex.Value);
-            }
-
-            if (isInsert)
-            {
                 overRows.ForEach(r =>
                 {
                     r.RowIndex.Value++;
                     this.ReplaceCellReference(r);
                 });
+            }
+            else
+            {
+                nearRow = this.Current.SheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex.Value >= row.RowIndex.Value);
             }
 
             if (nearRow != null)
@@ -368,20 +364,16 @@ namespace SimpleExcelXml
             {
                 overCells = row.Elements<Cell>().Where(c => columnIndex <= this.GetIndexFromColumn(c.CellReference.Value));
                 nearCell = overCells.FirstOrDefault();
-            }
-            else
-            {
-                nearCell = row.Elements<Cell>().FirstOrDefault(c => columnIndex <= this.GetIndexFromColumn(c.CellReference.Value));
-            }
-
-            if (isInsert)
-            {
                 overCells.ForEach(c =>
                 {
                     uint index = this.GetIndexFromColumn(c.CellReference.Value);
                     index++;
                     c.CellReference.Value = this.GetColumnFromIndex(index) + row.RowIndex.Value.ToString();
                 });
+            }
+            else
+            {
+                nearCell = row.Elements<Cell>().FirstOrDefault(c => columnIndex <= this.GetIndexFromColumn(c.CellReference.Value));
             }
 
             if (nearCell != null)
@@ -393,7 +385,7 @@ namespace SimpleExcelXml
         #endregion
 
         /// <summary>
-        /// 行要素取得。
+        /// 行要素取得(指定行が存在しない場合は自動追加)
         /// </summary>
         /// <param name="xml"></param>
         /// <param name="index"></param>
@@ -411,7 +403,7 @@ namespace SimpleExcelXml
         }
 
         /// <summary>
-        /// セル要素取得
+        /// セル要素取得(指定セルが存在しない場合は自動追加)
         /// </summary>
         /// <param name="row"></param>
         /// <param name="index"></param>
