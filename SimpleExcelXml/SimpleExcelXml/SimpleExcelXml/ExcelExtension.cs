@@ -13,7 +13,7 @@ namespace SimpleExcelXml
         /// <returns></returns>
         public static CellValues GetCellValuesType(this Type type)
         {
-            if (type.Equals(typeof(string)))
+            if (type.Equals(typeof(string)) || type.Equals(typeof(DateTime)))
             {
                 return CellValues.String;
             }
@@ -21,10 +21,12 @@ namespace SimpleExcelXml
             {
                 return CellValues.Boolean;
             }
-            else if (type.Equals(typeof(DateTime)))
-            {
-                return CellValues.Date;
-            }
+            // 日付型で書き込むとExcelが破損判定になってしまう
+            // 参考：URL：https://social.msdn.microsoft.com/Forums/vstudio/ja-JP/c171cb83-8819-4d26-b411-e39a1e9ccae9/open-xml-sdk?forum=netfxgeneralja
+            //else if (type.Equals(typeof(DateTime)))
+            //{
+            //    return CellValues.Date;
+            //}
 
             return CellValues.Number;
         }
@@ -42,9 +44,7 @@ namespace SimpleExcelXml
                 case CellValues.Boolean:
                     return value.Equals("1");
                 case CellValues.Date:
-                    DateTime d;
-                    DateTime.TryParse(value, out d);
-                    return d;
+                    return DateTime.FromOADate(Convert.ToDouble(value));
                 case CellValues.InlineString:
                     return cell.InlineString.Text.InnerText;
                 case CellValues.Number:
