@@ -176,12 +176,17 @@ namespace SimpleExcelXml
         /// <returns></returns>
         private string GetColumnFromIndex(uint index)
         {
-            // 1桁目 + 2桁目(十の位) * 26 = 2桁目の計算
-            // 1桁目 + 2桁目(十の位) * 26 + 3桁目(百の位) * 676
             string column;
+            // 3桁目
             uint n1 = index / 676;
-            uint n2 = index % 676 / 26;
-            uint n3 = index % 676 % 26 + 1;
+            n1 = index % 676 == 0 ? n1 - 1 : n1;
+            // 2桁目
+            uint n2 = index % 676;
+            n2 = n2 % 26 == 0 ? n2 / 26 - 1 : n2 / 26;
+            // 1桁目
+            uint n3 = index % 676 % 26;
+            n3 = n3.Equals(0) ? 26 : n3;
+
             column = n1 > 0 ? ((char)(n1 + 64)).ToString() : "";
             column += n2 > 0 ? ((char)(n2 + 64)).ToString() : "";
             column += ((char)(n3 + 64)).ToString();
