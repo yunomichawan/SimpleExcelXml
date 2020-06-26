@@ -63,7 +63,7 @@ namespace ConsoleApplication1
             // シートの削除
             simpleExcelCreator.RemoveSheet("SampleSheet3");
             // セルの値読取
-            object value1 = simpleExcelCreator.ReadCell(1, 10);
+            object value1 = simpleExcelCreator.ReadCell(1, 11);
             object value2 = simpleExcelCreator.ReadCell("A2");
             object value3 = simpleExcelCreator.ReadCell("C2");
             simpleExcelCreator.WriteCell(1, 11, DateTime.Now);
